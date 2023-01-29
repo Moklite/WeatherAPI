@@ -36,7 +36,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Upskillz_invoice_mgt_api", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Moklite API", Version = "v1" });
 });
 
 builder.Services.AddCors(c =>
