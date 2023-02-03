@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using WeatherAPI.DTO;
 using WeatherAPI.Entities;
 using WeatherAPI.Interface;
 
@@ -9,9 +11,11 @@ namespace WeatherAPI.Controllers
     public class MemberController : ControllerBase
     {
         private readonly IMemberRepository _memberRepository;
-        public MemberController(IMemberRepository memberRepository)
+        private readonly IMapper _mapper;
+        public MemberController(IMemberRepository memberRepository, IMapper mapper)
         {
             _memberRepository = memberRepository;
+            _mapper = mapper;
         }
 
         [HttpGet("GetMembers")]
@@ -31,19 +35,38 @@ namespace WeatherAPI.Controllers
         }
 
         [HttpPost("CreateMember")]
-        public async Task<IActionResult> CreateMember([FromBody]PmeMember pmeMember)
+        public async Task<IActionResult> CreateMember([FromBody]PmeMemberDTO pmeMember)
         {
-            var entity = await _memberRepository.AddAsync(pmeMember);
-            if (entity is not null) return Ok(entity);
-            return BadRequest(entity);
+            var createModel = _mapper.Map<PmeMember>(pmeMember);
+
+            try
+            {
+                var entity = await _memberRepository.AddAsync(createModel);
+                 return Ok(entity);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            
         }
 
         [HttpPut("UpdateMember")]
-        public async Task<IActionResult> UpdateMember([FromBody]PmeMember pmeMember)
+        public async Task<IActionResult> UpdateMember([FromBody]PmeMemberDTO pmeMember)
         {
-            var entity = await _memberRepository.UpdateAsync(pmeMember);
-            if (entity is not null) return Ok(entity);
-            return BadRequest(entity);
+            var createModel = _mapper.Map<PmeMember>(pmeMember);
+            try
+            {
+
+                var entity = await _memberRepository.UpdateAsync(createModel);
+                return Ok(entity);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpDelete("{id}",Name ="DeleteMember")]

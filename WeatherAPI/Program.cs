@@ -4,8 +4,9 @@ using WeatherAPI.Implementation;
 using WeatherAPI.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using WeatherAPI.Utilities;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IWeatherService, WeatherService>();
+builder.Services.AddAutoMapper(typeof(AutomapperProfile));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
